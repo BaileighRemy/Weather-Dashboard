@@ -1,8 +1,5 @@
 import dotenv from 'dotenv';
-import { access } from 'node:fs';
 dotenv.config();
-const APIkey = "78d43e7fc9c1241ef145484bffe2da19";
-const apiURL = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}";
 
 
 // TODO: Define an interface for the Coordinates object
@@ -31,12 +28,13 @@ class WeatherService {
   apiKey: string;
 
   constructor() {
-    this.baseURL = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}";
-    this.apiKey = process.env.OPENWEATHER_API_KEY || "78d43e7fc9c1241ef145484bffe2da19";
+    this.baseURL = process.env.API_BASE_URL || "";
+    this.apiKey = process.env.API_KEY || ""; 
   }
   // TODO: Create fetchLocationData method
    private async fetchLocationData(query: string) {
-    const response = await fetch(`${this.baseURL}/weather?q=${query}&appid=${this.apiKey}`);
+    console.log(`${this.baseURL}/data/2.5/weather?q=${query}&appid=${this.apiKey}`);
+    const response = await fetch(`${this.baseURL}/data/2.5/weather?q=${query}&appid=${this.apiKey}`);
     return response.json();
    }
   // TODO: Create destructureLocationData method
@@ -47,12 +45,12 @@ class WeatherService {
     };
    }
   // TODO: Create buildGeocodeQuery method
-   private buildGeocodeQuery(city: string): string {
-    return `${this.baseURL}/weather?q=${city}&appid=${this.apiKey}`;
-   }
+  //  private buildGeocodeQuery(city: string): string {
+  //   return `${this.baseURL}/weather?q=${city}&appid=${this.apiKey}`;
+  //  }
   // TODO: Create buildWeatherQuery method
    private buildWeatherQuery(coordinates: Coordinates): string {
-    return `${this.baseURL}/forecast?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${this.apiKey}`;
+    return `${this.baseURL}/data/2.5/forecast?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${this.apiKey}`;
    }
   // TODO: Create fetchAndDestructureLocationData method
    private async fetchAndDestructureLocationData(city: string) {
@@ -66,10 +64,11 @@ class WeatherService {
   }
   // TODO: Build parseCurrentWeather method
    private parseCurrentWeather(response: any): Weather {
+    console.log(response)
     return new Weather(
-      response.main.temp,
-      response.main.humidity,
-      response.wind.speed,
+      response.list[0].main.temp,
+      response.list[0].main.humidity,
+      response.list[0].wind.speed,
     );
      }
   // TODO: Complete buildForecastArray method
@@ -87,10 +86,14 @@ class WeatherService {
         const currentWeather = this.parseCurrentWeather(weatherData);
         const forecastArray = this.buildForecastArray(weatherData.list);
         
-        return {
-            currentWeather,
-            forecastArray
-        };
+        // return {
+        //     currentWeather,
+        //     forecastArray
+        // };
+        return [
+          currentWeather,
+          ...forecastArray
+        ]
     }
    }
 
