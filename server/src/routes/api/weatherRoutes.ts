@@ -25,7 +25,6 @@ router.get('/history', async (_req: Request, res: Response) => {
   try {
     // const history = await HistoryService.getCities();
     // res.status(200).json(history);
-    res.status(200).json([]);
   } catch (error) {
     console.error(error);
     res.status(500).json({msg: 'Error retrieving search history'});

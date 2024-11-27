@@ -31,6 +31,10 @@ class WeatherService {
     this.baseURL = process.env.API_BASE_URL || "";
     this.apiKey = process.env.API_KEY || ""; 
   }
+
+  private convertKelvinToFahrenheit(kelvin: number): number {
+    return (kelvin - 273.15) * (9 / 5) + 32;
+  }
   // TODO: Create fetchLocationData method
    private async fetchLocationData(query: string) {
     console.log(`${this.baseURL}/data/2.5/weather?q=${query}&appid=${this.apiKey}`);
@@ -66,7 +70,7 @@ class WeatherService {
    private parseCurrentWeather(response: any): Weather {
     console.log(response)
     return new Weather(
-      response.list[0].main.temp,
+      this.convertKelvinToFahrenheit(response.list[0].main.temp),
       response.list[0].main.humidity,
       response.list[0].wind.speed,
     );
@@ -74,7 +78,7 @@ class WeatherService {
   // TODO: Complete buildForecastArray method
    private buildForecastArray(weatherData: any[]): Weather[] {
     return weatherData.map(item => new Weather(
-      item.main.temp,
+      this.convertKelvinToFahrenheit(item.main.temp),
       item.main.humidity,
       item.wind.speed,
   ));
@@ -97,5 +101,6 @@ class WeatherService {
     }
    }
 
+   
 
 export default new WeatherService();
