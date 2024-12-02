@@ -9,21 +9,21 @@ interface Coordinates {
 }
 // TODO: Define a class for the Weather object
 class Weather {
-  tempF: number;
+  temperature: number;
   humidity: number;
   windSpeed: number;
   date: string;
   icon: string;
   iconDescription: string;
-  name: string
-  constructor(tempF: number, humidity: number, windSpeed: number, date: string, icon: string, iconDescription: string, name: string) {
-    this.tempF = tempF;
+  city: string
+  constructor(temperature: number, humidity: number, windSpeed: number, date: string, icon: string, iconDescription: string, city: string) {
+    this.temperature = temperature;
     this.humidity = humidity;
     this.windSpeed = windSpeed;
     this.date = date;
     this.icon = icon;
     this.iconDescription = iconDescription;
-    this.name = name;
+    this.city = city;
   }
 }
 
@@ -39,7 +39,8 @@ class WeatherService {
   }
 
   private convertKelvinToFahrenheit(kelvin: number): number {
-    return (kelvin - 273.15) * (9 / 5) + 32;
+    console.log(kelvin);
+    return parseFloat(((kelvin - 273.15) * (9 / 5) + 32).toFixed(1));
   }
   // TODO: Create fetchLocationData method 
   private async fetchLocationData(city: string) {
@@ -100,8 +101,8 @@ class WeatherService {
           item.main.humidity,
           item.wind.speed,
           item.dt_txt,
-          item.weather.icon,
-          item.weather.description,
+          item.weather[0].icon,
+          item.weather[0].description,
           name,
         );
       }
