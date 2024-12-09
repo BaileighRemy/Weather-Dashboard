@@ -19,7 +19,7 @@ class HistoryService {
   cities: City[];
 
   constructor() {
-    this.filePath = path.join(__dirname, 'db.json');
+    this.filePath = path.join(__dirname, '../../db/searchHistory.json');
     this.cities = [];
   }
   // TODO: Define a read method that reads from the searchHistory.json file
@@ -50,6 +50,7 @@ class HistoryService {
     const cities = await this.getCities();
     const newCity = new City(cityName, this.generateUniqueId());
     cities.push(newCity);
+    console.log("Here is a new city");
     await this.write(cities);
     return newCity;
    }
